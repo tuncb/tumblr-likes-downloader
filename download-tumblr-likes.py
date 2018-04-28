@@ -11,14 +11,13 @@ def gather_likes(client):
   nr_available_likes = min(client.likes()["liked_count"], MAX_AVALIBLE_LIKES_LIMIT)
   total_likes_gathered = 0
   all_likes = []
-  while total_likes_gathered < nr_available_likes:
-    likes = client.likes(offset = total_likes_gathered)["liked_posts"]
-    if len(likes) == 0:
-      break
+
+  likes = client.likes(offset = total_likes_gathered)["liked_posts"]
+  while len(likes) > 0 and total_likes_gathered < nr_available_likes:
     total_likes_gathered += len(likes)
     all_likes.extend(likes)
     print("{}Gathered #{} likes".format(ERASE_LINE, len(all_likes)), end="\r")
-
+    likes = client.likes(offset = total_likes_gathered)["liked_posts"]
 
   print("")
   return all_likes
